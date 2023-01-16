@@ -1,0 +1,43 @@
+@import 'variables.scss';
+@import 'main-page.scss';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+a {
+  font-family: inherit;
+  text-decoration: none;
+}
+
+li {
+  list-style-type: none;
+}
+
+.btn {
+  padding: 10px;
+  background-color: $color-main;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 700;
+  color: $color-dark-blue;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color $transition ease;
+
+  &:hover {
+    background-color: $hover;
+  }
+  &:active {
+    background-color: $active;
+  }
+}
