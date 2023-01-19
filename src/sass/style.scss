@@ -1,5 +1,8 @@
 @import 'variables.scss';
-@import 'main-page.scss';
+@import './abstract/mixins.scss';
+@import 'main.scss';
+@import 'garage.scss';
+@import 'control-panel.scss';
 
 * {
   box-sizing: border-box;
@@ -11,6 +14,7 @@
 body {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
+  background-color: $color-black;
 }
 
 a {
@@ -23,10 +27,11 @@ li {
 }
 
 .btn {
-  padding: 10px;
+  width: 70px;
+  padding: 5px 10px;
   background-color: $color-main;
-  border-radius: 25px;
-  font-size: 16px;
+  border-radius: 5px;
+  font-size: 14px;
   font-weight: 700;
   color: $color-dark-blue;
   outline: none;
@@ -39,5 +44,56 @@ li {
   }
   &:active {
     background-color: $active;
+  }
+
+  &--panel {
+    min-width: 120px;
+    min-height: 30px;
+  }
+}
+
+.btn-control {
+  width: 25px;
+  padding: 3px;
+  background-color: transparent;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  transition: border-color $transition ease, color $transition ease;
+
+  &:hover {
+    border-color: $hover;
+    color: $hover;
+  }
+  &:active {
+    border-color: $active;
+    color: $active;
+  }
+}
+
+.input {
+  width: 50%;
+  padding: 10px 25px;
+  font-family: sans-serif;
+  font-weight: 700;
+  line-height: 1.3;
+  color: $color-gray;
+  background-color: #fff;
+  border: 2px solid $color-gray;
+  border-radius: 5px;
+  outline: none;
+
+  &:hover {
+    border-color: $hover;
+  }
+  &:focus {
+    border-color: $active;
+    outline: none;
+  }
+
+  @media (max-width: 576px) {
+    width: 100%;
   }
 }
