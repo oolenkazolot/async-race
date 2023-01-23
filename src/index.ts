@@ -11,7 +11,7 @@ const winnersPage: IWinnersPage = new WinnersPage();
 
 const header: IHeader = new Header();
 
-// router start
+// router start a
 // список страниц с колбеками: путь и что делать
 const routs: IRout[] = [
   {
