@@ -9,19 +9,50 @@ export interface IRouter {
 }
 
 export interface IController {
-  getAutos: (page: number, limitCars: number) => Promise<IAutosData | undefined>;
-  getAutosId: (page: number, limitCars: number) => Promise<IAutos[] | undefined>;
-  createCar: (name: string, color: string) => Promise<IResponseCreateCar | undefined>;
+  getAutos: (
+    page: number,
+    limitCars: number
+  ) => Promise<IAutosData | undefined>;
+  getAutosId: (
+    page: number,
+    limitCars: number
+  ) => Promise<IAutos[] | undefined>;
+  createCar: (
+    name: string,
+    color: string
+  ) => Promise<IResponseCreateCar | undefined>;
   deleteCar: (id: number) => Promise<void>;
   startCarEngine: (id: number) => Promise<IResponseCarEngine | undefined>;
   startEngineDrive: (id: number) => Promise<IResponseEngineDrive | undefined>;
   stopCarEngine: (id: number) => Promise<void>;
-  updateCar: (id: number, name: string, color: string) => Promise<IResponseUpdateCar | undefined>;
-  startCar: (auto: IAutos, btnRun: HTMLButtonElement, btnStop: HTMLButtonElement, setWinner?: (id: number, name: string, time: number) => void) => Promise<void>;
-  stopCar: (auto: IAutos, btnRun: HTMLButtonElement, btnStop: HTMLButtonElement) => Promise<void>;
+  updateCar: (
+    id: number,
+    name: string,
+    color: string
+  ) => Promise<IResponseUpdateCar | undefined>;
+  startCar: (
+    auto: IAutos,
+    btnRun: HTMLButtonElement,
+    btnStop: HTMLButtonElement,
+    setWinner?: (id: number, name: string, time: number) => void
+  ) => Promise<void>;
+  stopCar: (
+    auto: IAutos,
+    btnRun: HTMLButtonElement,
+    btnStop: HTMLButtonElement
+  ) => Promise<void>;
   createWinner: (id: number, time: number) => Promise<IWinner | undefined>;
-  updateWinner: (id: number, wins: number, time: number) => Promise<IWinner | undefined>;
-  getWinners: (page: number, limit: number, sort: string, direction: string) => Promise<IWinnersData | undefined>;
+  updateWinner: (
+    id: number,
+    wins: number,
+    time: number
+  ) => Promise<IWinner | undefined>;
+  getWinners: (
+    page: number,
+    limit: number,
+    sort: string,
+    direction: string
+  ) => Promise<IWinnersData | undefined>;
   getWinnersAll: () => Promise<IWinner[] | undefined>;
   getAutosAll: () => Promise<IAutos[] | undefined>;
   startEngine: (id: number) => Promise<number | undefined>;
@@ -43,7 +74,13 @@ export interface IAutos {
 }
 
 export interface IGarage {
-  createGarage: (autos: IAutos[], drawGarage: () => void, countCars: number, getPage: () => number, getLimitCars: () => number) => HTMLElement;
+  createGarage: (
+    autos: IAutos[],
+    drawGarage: () => void,
+    countCars: number,
+    getPage: () => number,
+    getLimitCars: () => number
+  ) => HTMLElement;
 }
 
 export interface IResponseCarEngine {
@@ -56,7 +93,11 @@ export interface IResponseEngineDrive {
 }
 
 export interface IControlPanel {
-  createControlPanel: (drawGarage: () => void, getPage: () => number, getLimitCars: () => number) => HTMLElement;
+  createControlPanel: (
+    drawGarage: () => void,
+    getPage: () => number,
+    getLimitCars: () => number
+  ) => HTMLElement;
 }
 
 export interface IResponseCreateCar {
@@ -72,12 +113,22 @@ export interface IResponseUpdateCar {
 }
 
 export interface ITemplate {
-  createBtn: (myClassOne: string, myClassTwo: string, content: string, myClassThree?: string) => HTMLButtonElement;
+  createBtn: (
+    myClassOne: string,
+    myClassTwo: string,
+    content: string,
+    myClassThree?: string
+  ) => HTMLButtonElement;
   createSpan: (myClass: string, content: string) => HTMLElement;
 }
 
 export interface IPagination {
-  createPagination: (getPage: () => number, getLimitCars: () => number, countCars: number, drawGarage: () => void) => HTMLElement;
+  createPagination: (
+    getPage: () => number,
+    getLimitCars: () => number,
+    countCars: number,
+    drawGarage: () => void
+  ) => HTMLElement;
 }
 
 export interface IAutosData {
