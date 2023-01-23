@@ -3,6 +3,11 @@
 @import 'main.scss';
 @import 'garage.scss';
 @import 'control-panel.scss';
+@import 'pagination.scss';
+@import 'winners.scss';
+@import 'header.scss';
+@import 'modal.scss';
+@import 'winner-modal.scss';
 
 * {
   box-sizing: border-box;
@@ -46,7 +51,17 @@ li {
     background-color: $active;
   }
 
+  &:disabled {
+    background-color: $color-gray;
+    cursor: auto;
+  }
+
   &--panel {
+    min-width: 120px;
+    min-height: 30px;
+  }
+
+  &--page {
     min-width: 120px;
     min-height: 30px;
   }
@@ -91,6 +106,10 @@ li {
   &:focus {
     border-color: $active;
     outline: none;
+  }
+
+  &.update-cars__id {
+    display: none;
   }
 
   @media (max-width: 576px) {

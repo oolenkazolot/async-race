@@ -1,30 +1,25 @@
-abstract class Template {
-  protected createElement(
-    myClass: string,
-    parentElement?: HTMLElement,
-    text?: string
-  ): HTMLElement {
-    const newElem = document.createElement("div");
-    newElem.classList.add(myClass);
-    if (parentElement) {
-      parentElement.append(newElem);
+class Template {
+  public createBtn(
+    myClassOne: string,
+    myClassTwo: string,
+    content: string,
+    myClassThree?: string
+  ): HTMLButtonElement {
+    const btnEl: HTMLButtonElement = document.createElement("button");
+    btnEl.classList.add(myClassOne);
+    btnEl.classList.add(myClassTwo);
+    if (myClassThree) {
+      btnEl.classList.add(myClassThree);
     }
-    if (text) {
-      newElem.innerText = text;
-    }
-    return newElem;
+    btnEl.textContent = content;
+    return btnEl;
   }
 
-  protected createInput(
-    myClass: string,
-    parentElement: HTMLElement,
-    placeholder: string
-  ): HTMLInputElement {
-    const inputEl = document.createElement("input");
-    inputEl.classList.add(myClass);
-    inputEl.placeholder = placeholder;
-    parentElement.append(inputEl);
-    return inputEl;
+  public createSpan(myClass: string, content: string): HTMLElement {
+    const span: HTMLElement = document.createElement("span");
+    span.classList.add(myClass);
+    span.textContent = content;
+    return span;
   }
 }
 

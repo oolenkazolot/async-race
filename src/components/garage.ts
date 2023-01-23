@@ -1,85 +1,119 @@
-import {
-  IAutos,
-  IController,
-  IResponseCarEngine,
-  IResponseEngineDrive,
-} from "src/types";
+import { IAutos, IController, ITemplate, IPagination } from "src/types";
 import Controller from "../utils/controller";
+import Template from "../templates/template";
+import Pagination from "../components/pagination";
 
 class Garage {
   controller: IController;
+  template: ITemplate;
+  pagination: IPagination;
+
   constructor() {
     this.controller = new Controller();
+    this.template = new Template();
+    this.pagination = new Pagination();
   }
-  public createGarage(autos: IAutos[], drawMain: () => void): HTMLElement {
+  public createGarage(
+    autos: IAutos[],
+    drawGarage: () => void,
+    countCars: number,
+    getPage: () => number,
+    getLimitCars: () => number
+  ): HTMLElement {
     const garage: HTMLElement = document.createElement("div");
     garage.classList.add("garage__wrap");
-    const titles: HTMLElement[] = this.createTitles(autos);
-    garage.append(...titles);
+    const title: HTMLElement = this.createTitles(countCars);
+    const paginationBlock: HTMLElement = this.pagination.createPagination(
+      getPage,
+      getLimitCars,
+      countCars,
+      drawGarage
+    );
+    garage.append(title, paginationBlock);
     autos.map((auto) => {
-      const container: HTMLElement = this.createContainer(auto, drawMain);
+      const container: HTMLElement = this.createContainer(auto, drawGarage);
       const images: HTMLElement = this.createImages(auto);
       garage.append(container, images);
     });
     return garage;
   }
 
-  private createTitles(autos: IAutos[]): HTMLElement[] {
-    const title: HTMLElement = document.createElement("h1");
+  private createTitles(countCars: number): HTMLElement {
+    const title: HTMLElement = document.createElement("h2");
     title.classList.add("garage__title");
-    title.textContent = `Garage (${autos.length})`;
-    const subTitle: HTMLElement = document.createElement("p");
-    subTitle.classList.add("garage__subtitle");
-    subTitle.textContent = "Page #1";
-    return [title, subTitle];
+    title.textContent = `Garage (${countCars})`;
+    return title;
   }
 
-  private createContainer(auto: IAutos, drawMain: () => void): HTMLElement {
+  private createContainer(auto: IAutos, drawGarage: () => void): HTMLElement {
     const container: HTMLElement = document.createElement("div");
     container.classList.add("garage__container");
-    const buttons: HTMLElement = this.createButtons(auto, drawMain);
+    const buttons: HTMLElement = this.createButtons(auto, drawGarage);
     const nameAuto: HTMLElement = this.createNameAuto(auto.name);
-    const controlAuto: HTMLElement = this.controlAuto(auto.id, drawMain);
+    const controlAuto: HTMLElement = this.controlAuto(auto);
     container.append(buttons, nameAuto, controlAuto);
     return container;
   }
 
-  private createButtons(auto: IAutos, drawMain: () => void): HTMLElement {
+  private createButtons(auto: IAutos, drawGarage: () => void): HTMLElement {
     const buttons: HTMLElement = document.createElement("div");
     buttons.classList.add("garage__buttons");
-    const btnSelect: HTMLElement = this.createBtn(
+    const btnSelect: HTMLButtonElement = this.template.createBtn(
       "garage__btn-select",
       "btn",
       "Select"
     );
-    const btnRemove: HTMLElement = this.createBtn(
+    this.onClickHandlerSelect(btnSelect, auto);
+    const btnRemove: HTMLButtonElement = this.template.createBtn(
       "garage__btn-remove",
       "btn",
       "Remove"
     );
-    btnRemove.addEventListener(
-      "click",
-      this.deleteCar.bind(this, auto, drawMain)
-    );
+    this.onClickHandlerRemove(btnRemove, auto.id, drawGarage);
     buttons.append(btnSelect, btnRemove);
     return buttons;
   }
 
-  private async deleteCar(auto: IAutos, drawMain: () => void): Promise<void> {
-    await this.controller.deleteCar(auto.id);
-    drawMain();
+  private onClickHandlerRemove(
+    btnRemove: HTMLButtonElement,
+    id: number,
+    drawGarage: () => void
+  ) {
+    btnRemove.addEventListener("click", () => {
+      this.deleteCar(id, drawGarage);
+      this.deleteWinner(id);
+    });
   }
 
-  private createBtn(
-    classNameOne: string,
-    classNameTwo: string,
-    content: string
-  ): HTMLButtonElement {
-    const btn: HTMLButtonElement = document.createElement("button");
-    btn.classList.add(classNameOne);
-    btn.classList.add(classNameTwo);
-    btn.textContent = content;
-    return btn;
+  private onClickHandlerSelect(
+    btnSelect: HTMLButtonElement,
+    auto: IAutos
+  ): void {
+    btnSelect.addEventListener("click", () => {
+      const inputUpdateName: HTMLInputElement | null = document.querySelector(
+        ".update-cars__name"
+      );
+      const inputUpdateColor: HTMLInputElement | null = document.querySelector(
+        ".update-cars__color"
+      );
+      const inputUpdateId: HTMLInputElement | null = document.querySelector(
+        ".update-cars__id"
+      );
+      if (inputUpdateName && inputUpdateColor && inputUpdateId) {
+        inputUpdateName.value = auto.name;
+        inputUpdateColor.value = auto.color;
+        inputUpdateId.value = auto.id.toString();
+      }
+    });
+  }
+
+  private async deleteCar(id: number, drawGarage: () => void): Promise<void> {
+    await this.controller.deleteCar(id);
+    drawGarage();
+  }
+
+  private async deleteWinner(id: number): Promise<void> {
+    await this.controller.deleteWinner(id);
   }
 
   private createNameAuto(name: string): HTMLElement {
@@ -89,79 +123,28 @@ class Garage {
     return nameAuto;
   }
 
-  private controlAuto(carId: number, drawMain: () => void): HTMLElement {
+  private controlAuto(auto: IAutos): HTMLElement {
     const controlAuto: HTMLElement = document.createElement("div");
     controlAuto.classList.add("control-auto");
-    const btnRun: HTMLButtonElement = this.createBtn(
+    const btnRun: HTMLButtonElement = this.template.createBtn(
       "control-auto__run",
       "btn-control",
       "A"
     );
     btnRun.addEventListener("click", () => {
-      this.startCarEngine(carId, btnRun, btnStop);
+      this.controller.startCar(auto, btnRun, btnStop);
     });
-    const btnStop: HTMLButtonElement = this.createBtn(
+    const btnStop: HTMLButtonElement = this.template.createBtn(
       "control-auto__stop",
       "btn-control",
       "B"
     );
     btnStop.disabled = true;
     btnStop.addEventListener("click", () => {
-      this.stopCarEngine(carId, btnRun, btnStop);
+      this.controller.stopCar(auto, btnRun, btnStop);
     });
     controlAuto.append(btnRun, btnStop);
     return controlAuto;
-  }
-
-  private async stopCarEngine(
-    carId: number,
-    btnRun: HTMLButtonElement,
-    btnStop: HTMLButtonElement
-  ): Promise<void> {
-    await this.controller.stopCarEngine(carId);
-    const imgAuto = document.getElementById(carId.toString());
-    if (imgAuto) {
-      imgAuto.classList.remove("animation-active");
-      imgAuto.style.left = 5 + "%";
-    }
-    btnRun.disabled = false;
-    btnStop.disabled = true;
-  }
-
-  private async startCarEngine(
-    carId: number,
-    btnRun: HTMLButtonElement,
-    btnStop: HTMLButtonElement
-  ): Promise<void> {
-    const responseCarEngine:
-      | IResponseCarEngine
-      | undefined = await this.controller.startCarEngine(carId);
-    if (!responseCarEngine) {
-      return;
-    }
-    btnRun.disabled = true;
-    btnStop.disabled = false;
-
-    const imgAuto: HTMLElement | null = document.getElementById(
-      carId.toString()
-    );
-    if (imgAuto) {
-      imgAuto.classList.add("animation-active");
-      imgAuto.style.animationDuration =
-        responseCarEngine.distance / responseCarEngine.velocity / 1000 + "s";
-    }
-    const responseEngineDrive:
-      | IResponseEngineDrive
-      | undefined = await this.controller.startEngineDrive(carId);
-    if (!responseEngineDrive) {
-      console.log(responseEngineDrive);
-      if (imgAuto) {
-        const left: number = imgAuto.getBoundingClientRect().left;
-        console.log(left);
-        imgAuto.style.left = left + "px";
-        imgAuto.classList.remove("animation-active");
-      }
-    }
   }
 
   private createImages(auto: IAutos): HTMLElement {

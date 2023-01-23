@@ -1,13 +1,15 @@
 import "./sass/style.scss";
 import Router from "./utils/Routing";
 import MainPage from "./pages/main";
+import WinnersPage from "./pages/winners";
+import Header from "./components/header";
 
-import { IRout, IMainPage } from "./types/index";
+import { IRout, IMainPage, IHeader, IWinnersPage } from "./types/index";
 
 const mainPage: IMainPage = new MainPage();
+const winnersPage: IWinnersPage = new WinnersPage();
 
-// const headerTop = new TopHeader();
-// headerTop.drawElements();
+const header: IHeader = new Header();
 
 // router start
 // список страниц с колбеками: путь и что делать
@@ -16,10 +18,10 @@ const routs: IRout[] = [
     path: "",
     cb: mainPage.draw.bind(mainPage),
   },
-  // {
-  //   path: "cart",
-  //   cb: cartPage.draw.bind(cartPage),
-  // },
+  {
+    path: "winners",
+    cb: winnersPage.draw.bind(winnersPage),
+  },
   // {
   //   path: "products/:id",
   //   cb: (id) => {
@@ -29,6 +31,7 @@ const routs: IRout[] = [
 ];
 //объект роутера
 const router = new Router(routs, mainPage.draw);
+header.drawElements(router);
 // mainPage.draw();
 // проврка какая скйчас страница
 mainPage.router = router;
